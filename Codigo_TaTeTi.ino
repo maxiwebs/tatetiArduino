@@ -49,22 +49,6 @@
 #define F3 16
 #define F4 17
 
-//Re-mapeo
-/*
- * 1: 4 y 1 => F1 ES PIN 4; C1 ES PIN 1
- * 2: 4 y 2 => F1 ES PIN 4; C2 ES PIN 2
- * 3: 4 y 3 => F1 ES PIN 4; C3 ES PIN 3
-   4: 5 y 1 => F2 ES PIN 5; C1 ES PIN 1
-   5: 5 y 2 => F2 ES PIN 5; C2 ES PIN 2
-   6: 5 y 3 => F2 ES PIN 5; C2 ES PIN 3
-   7: 6 y 1 => F3 ES PIN 6; C1 ES PIN 1
-   8: 6 y 2 => F3 ES PIN 6; C2 ES PIN 2
-   9: 6 y 3 => F3 ES PIN 6; C3 ES PIN 3
-   *: 7 y 1 => F4 ES PIN 7; C1 ES PIN 1
-   0: 7 y 2 => F4 ES PIN 7; C2 ES PIN 2
-   #: 7 y 3 => F4 ES PIN 7; C3 ES PIN 3
- */
- 
 #include <Keypad.h>
 const byte FILASLEDS = 3;
 const byte COLUMNASLEDS = 3;
@@ -93,28 +77,25 @@ Keypad keypad = Keypad( makeKeymap(teclado_matricial), pines_filas, pines_column
 
 void setup() {
   Serial.begin(9600);
-  pinMode(0,INPUT);
-  pinMode(1,INPUT);
  
 }
+
+
 void loop() {
 
   //testLedsRGB();
-
-  char key = keypad.getKey();
-
-  if (key != NO_KEY){
-    Serial.println(key); //print to serial the key that has been pressed
-  }
-
-  if (key == '#'){
-    testLedsRGB();
-  }
+  //testTeclado();
  
 }
 
 
-
+//Test del Teclado
+void testTeclado(){
+  char key = keypad.getKey();
+  if (key != NO_KEY){
+    Serial.println(key); //print to serial the key that has been pressed
+  }
+}
 
 
 //Test de los 10 leds RGBs
