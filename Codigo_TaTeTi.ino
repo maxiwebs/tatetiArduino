@@ -103,10 +103,38 @@ void loop() {
   }
 
   mostrarGanador();
+  reiniciarJuego();
   Serial.println("FIN de JUEGO");
 }
 
 //FUNCIONES DE JUEGO
+
+//Espera la tecla * para reiniciar el juego
+void reiniciarJuego(){
+
+  Serial.println("Para reiniciar el juego presione la tecla *"); //print to serial the key that has been pressed
+  delay(50);
+  char key = keypad.getKey();
+  
+  if (key != NO_KEY && key == '*'){
+    Serial.println(key);
+    alguienGano = false;
+    limpiarMatriz();
+  }
+
+}
+
+//Reinicio la matriz de juego tateti
+void limpiarMatriz(){
+  int contador = 1;
+  for (int i=0;i<3;i++){
+    for (int j=0;j<3;j++){
+      tateti[i][j] = contador + '0';
+      contador++;
+    } 
+  }
+  imprimirTablero();
+}
 
 //Prendo todos los leds con el color del ganador
 void mostrarGanador(){
