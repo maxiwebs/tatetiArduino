@@ -64,10 +64,10 @@ char teclado_matricial [FILASTECLADO][COLUMNASTECLADO] = {
   
 };
 
-char tateti[FILASLEDS][COLUMNASLEDS] = {
-  {'1', '2', '3'},
-  {'4', '5', '6'},
-  {'7', '8', '9'}
+int tateti[FILASLEDS][COLUMNASLEDS] = {
+  {11, 12, 13},
+  {14, 15, 16},
+  {17, 18, 19}
 };
 
 byte pines_filas[FILASTECLADO] = {F1, F2, F3, F4}; 
@@ -77,7 +77,7 @@ Keypad keypad = Keypad( makeKeymap(teclado_matricial), pines_filas, pines_column
 int jugadorActual = 0;
 char teclaPresionada;
 bool alguienGano = false;
-char ganador = 'X';
+int  ganador = 2;
 int cantidadMovimientos = 0;
 
 void setup() {
@@ -126,10 +126,10 @@ void reiniciarJuego(){
 
 //Reinicio la matriz de juego tateti
 void limpiarMatriz(){
-  int contador = 1;
+  int contador = 11;
   for (int i=0;i<3;i++){
     for (int j=0;j<3;j++){
-      tateti[i][j] = contador + '0';
+      tateti[i][j] = contador;
       contador++;
     } 
   }
@@ -139,7 +139,7 @@ void limpiarMatriz(){
 //Prendo todos los leds con el color del ganador
 void mostrarGanador(){
 
-  if (ganador == 'R'){
+  if (ganador == 0){
     digitalWrite(R11, HIGH); digitalWrite(G11, LOW); digitalWrite(B11, LOW);
     digitalWrite(R12, HIGH); digitalWrite(G12, LOW); digitalWrite(B12, LOW);
     digitalWrite(R13, HIGH); digitalWrite(G13, LOW); digitalWrite(B13, LOW);
@@ -149,7 +149,7 @@ void mostrarGanador(){
     digitalWrite(R31, HIGH); digitalWrite(G31, LOW); digitalWrite(B31, LOW);
     digitalWrite(R32, HIGH); digitalWrite(G32, LOW); digitalWrite(B32, LOW);
     digitalWrite(R33, HIGH); digitalWrite(G33, LOW); digitalWrite(B33, LOW);  
-  }else if (ganador == 'V'){
+  }else if (ganador == 1){
     digitalWrite(R11, LOW); digitalWrite(G11, HIGH); digitalWrite(B11, LOW);
     digitalWrite(R12, LOW); digitalWrite(G12, HIGH); digitalWrite(B12, LOW);
     digitalWrite(R13, LOW); digitalWrite(G13, HIGH); digitalWrite(B13, LOW);
@@ -240,113 +240,160 @@ void siguienteTurno(int jugActual){
 void prenderLedJugado(int jugActual, char teclaPres){
 
   //O: rojo, 1: verde
-
   switch (teclaPres){
     case '1':
-      if (jugActual == 0){
-        //Prendo 1 rojo
-        digitalWrite(R11, HIGH); digitalWrite(G11, LOW); digitalWrite(B11, LOW);
-        tateti[0][0] = 'R';
+      //Si esta vacio el lugar
+      if (tateti[0][0] == 11){
+        if (jugActual == 0){
+          //Prendo 1 rojo
+          digitalWrite(R11, HIGH); digitalWrite(G11, LOW); digitalWrite(B11, LOW);
+          tateti[0][0] = 0;
+        }else {
+          //Prendo 1 verde
+          digitalWrite(R11, LOW); digitalWrite(G11, HIGH); digitalWrite(B11, LOW);    
+          tateti[0][0] = 1;
+        }
       }else {
-        //Prendo 1 verde
-        digitalWrite(R11, LOW); digitalWrite(G11, HIGH); digitalWrite(B11, LOW);    
-        tateti[0][0] = 'V';
+        Serial.println("Lugar ocupado");  
       }
       break;
 
     case '2':
-      if (jugActual == 0){
-        //Prendo 2 rojo
-        digitalWrite(R12, HIGH); digitalWrite(G12, LOW); digitalWrite(B12, LOW);
-        tateti[0][1] = 'R';
+      //Si esta vacio el lugar
+      if (tateti[0][1] == 12){    
+        if (jugActual == 0){
+          //Prendo 2 rojo
+          digitalWrite(R12, HIGH); digitalWrite(G12, LOW); digitalWrite(B12, LOW);
+          tateti[0][1] = 0;
+        }else {
+          //Prendo 2 verde
+          digitalWrite(R12, LOW); digitalWrite(G12, HIGH); digitalWrite(B12, LOW);    
+          tateti[0][1] = 1;
+        }
       }else {
-        //Prendo 2 verde
-        digitalWrite(R12, LOW); digitalWrite(G12, HIGH); digitalWrite(B12, LOW);    
-        tateti[0][1] = 'V';
+        Serial.println("Lugar ocupado");  
       }
       break;  
+
     case '3':
-      if (jugActual == 0){
-        //Prendo 3 rojo
-        digitalWrite(R13, HIGH); digitalWrite(G13, LOW); digitalWrite(B13, LOW);
-        tateti[0][2] = 'R';
+      //Si esta vacio el lugar
+      if (tateti[0][2] == 13){    
+        if (jugActual == 0){
+          //Prendo 3 rojo
+          digitalWrite(R13, HIGH); digitalWrite(G13, LOW); digitalWrite(B13, LOW);
+          tateti[0][2] = 0;
+        }else {
+          //Prendo 3 verde
+          digitalWrite(R13, LOW); digitalWrite(G13, HIGH); digitalWrite(B13, LOW);    
+          tateti[0][2] = 1;
+        }
       }else {
-        //Prendo 3 verde
-        digitalWrite(R13, LOW); digitalWrite(G13, HIGH); digitalWrite(B13, LOW);    
-        tateti[0][2] = 'V';
+        Serial.println("Lugar ocupado");  
       }
       break;
       
     case '4':
-      if (jugActual == 0){
-        //Prendo 4 rojo
-        digitalWrite(R21, HIGH); digitalWrite(G21, LOW); digitalWrite(B21, LOW);
-        tateti[1][0] = 'R';
+      //Si esta vacio el lugar
+      if (tateti[1][0] == 14){    
+        if (jugActual == 0){
+          //Prendo 4 rojo
+          digitalWrite(R21, HIGH); digitalWrite(G21, LOW); digitalWrite(B21, LOW);
+          tateti[1][0] = 0;
+        }else {
+          //Prendo 4 verde
+          digitalWrite(R21, LOW); digitalWrite(G21, HIGH); digitalWrite(B21, LOW);    
+          tateti[1][0] = 1;
+        }
       }else {
-        //Prendo 4 verde
-        digitalWrite(R21, LOW); digitalWrite(G21, HIGH); digitalWrite(B21, LOW);    
-        tateti[1][0] = 'V';
+        Serial.println("Lugar ocupado");  
       }
       break;
       
     case '5':
-      if (jugActual == 0){
-        //Prendo 5 rojo
-        digitalWrite(R22, HIGH); digitalWrite(G22, LOW); digitalWrite(B22, LOW);
-        tateti[1][1] = 'R';
+      //Si esta vacio el lugar
+      if (tateti[1][1] == 15){    
+        if (jugActual == 0){
+          //Prendo 5 rojo
+          digitalWrite(R22, HIGH); digitalWrite(G22, LOW); digitalWrite(B22, LOW);
+          tateti[1][1] = 0;
+        }else {
+          //Prendo 5 verde
+          digitalWrite(R22, LOW); digitalWrite(G22, HIGH); digitalWrite(B22, LOW);    
+          tateti[1][1] = 1;
+        }
       }else {
-        //Prendo 5 verde
-        digitalWrite(R22, LOW); digitalWrite(G22, HIGH); digitalWrite(B22, LOW);    
-        tateti[1][1] = 'V';
+        Serial.println("Lugar ocupado");  
       }
       break;
       
     case '6':
-      if (jugActual == 0){
-        //Prendo 6 rojo
-        digitalWrite(R23, HIGH); digitalWrite(G23, LOW); digitalWrite(B23, LOW);
-        tateti[1][2] = 'R';
+      //Si esta vacio el lugar
+      if (tateti[1][2] == 16){    
+        if (jugActual == 0){
+          //Prendo 6 rojo
+          digitalWrite(R23, HIGH); digitalWrite(G23, LOW); digitalWrite(B23, LOW);
+          tateti[1][2] = 0;
+        }else {
+          //Prendo 6 verde
+          digitalWrite(R23, LOW); digitalWrite(G23, HIGH); digitalWrite(B23, LOW);    
+          tateti[1][2] = 1;
+        }
       }else {
-        //Prendo 6 verde
-        digitalWrite(R23, LOW); digitalWrite(G23, HIGH); digitalWrite(B23, LOW);    
-        tateti[1][2] = 'V';
+        Serial.println("Lugar ocupado");  
       }
+
       break;
       
     case '7':
-      if (jugActual == 0){
-        //Prendo 7 rojo
-        digitalWrite(R31, HIGH); digitalWrite(G31, LOW); digitalWrite(B31, LOW);
-        tateti[2][0] = 'R';
+      //Si esta vacio el lugar
+      if (tateti[2][0] == 17){    
+        if (jugActual == 0){
+          //Prendo 7 rojo
+          digitalWrite(R31, HIGH); digitalWrite(G31, LOW); digitalWrite(B31, LOW);
+          tateti[2][0] = 0;
+        }else {
+          //Prendo 7 verde
+          digitalWrite(R31, LOW); digitalWrite(G31, HIGH); digitalWrite(B31, LOW);    
+          tateti[2][0] = 1;
+        }
       }else {
-        //Prendo 7 verde
-        digitalWrite(R31, LOW); digitalWrite(G31, HIGH); digitalWrite(B31, LOW);    
-        tateti[2][0] = 'V';
+        Serial.println("Lugar ocupado");  
       }
+
       break;
         
     case '8':
-      if (jugActual == 0){
-        //Prendo 8 rojo
-        digitalWrite(R32, HIGH); digitalWrite(G32, LOW); digitalWrite(B32, LOW);
-        tateti[2][1] = 'R';
+      //Si esta vacio el lugar
+      if (tateti[2][1] == 18){    
+        if (jugActual == 0){
+          //Prendo 8 rojo
+          digitalWrite(R32, HIGH); digitalWrite(G32, LOW); digitalWrite(B32, LOW);
+          tateti[2][1] = 0;
+        }else {
+          //Prendo 8 verde
+          digitalWrite(R32, LOW); digitalWrite(G32, HIGH); digitalWrite(B32, LOW);    
+          tateti[2][1] = 1;
+        }
       }else {
-        //Prendo 8 verde
-        digitalWrite(R32, LOW); digitalWrite(G32, HIGH); digitalWrite(B32, LOW);    
-        tateti[2][1] = 'V';
+        Serial.println("Lugar ocupado");  
       }
       break;
 
     case '9':
-      if (jugActual == 0){
-        //Prendo 9 rojo
-        digitalWrite(R33, HIGH); digitalWrite(G33, LOW); digitalWrite(B33, LOW);
-        tateti[2][2] = 'R';
+      //Si esta vacio el lugar
+      if (tateti[2][2] == 19){    
+        if (jugActual == 0){
+          //Prendo 9 rojo
+          digitalWrite(R33, HIGH); digitalWrite(G33, LOW); digitalWrite(B33, LOW);
+          tateti[2][2] = 0;
+        }else {
+          //Prendo 9 verde
+          digitalWrite(R33, LOW); digitalWrite(G33, HIGH); digitalWrite(B33, LOW);    
+          tateti[2][2] = 1;
+        }  
       }else {
-        //Prendo 9 verde
-        digitalWrite(R33, LOW); digitalWrite(G33, HIGH); digitalWrite(B33, LOW);    
-        tateti[2][2] = 'V';
-      }  
+        Serial.println("Lugar ocupado");  
+      }
       break;
       
   }//FIN switch(teclaPres)
