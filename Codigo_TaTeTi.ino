@@ -75,8 +75,9 @@ byte pines_columnas[COLUMNASTECLADO] = {C1, C2, C3};
 Keypad keypad = Keypad( makeKeymap(teclado_matricial), pines_filas, pines_columnas, FILASTECLADO, COLUMNASTECLADO);
 
 int jugadorActual = 0;
-char teclaPresionada;
+char teclaPresionada,destinoFicha;
 bool alguienGano = false;
+bool fichaSeleccionada = false;
 int  ganador = 2;
 int cantidadMovimientos = 0;
 
@@ -96,9 +97,27 @@ void loop() {
     imprimirTablero();
     teclaPresionada = escucharTeclado();
     cantidadMovimientos++;
-    Serial.print("Volvi con tecla: "); Serial.println(teclaPresionada);
-    prenderLedJugado(jugadorActual,teclaPresionada);
-    alguienGano = chequearVictoria(cantidadMovimientos);
+    //Si ya pusieron las 6 fichas
+    if (cantidadMovimientos > 6){
+      //Habilito mover
+      //Chequeo si presiono un lugar no vacio (osea selecciono una ficha propia)
+      fichaSeleccionada = chequearFichaSeleccionada(jugadorActual,teclaPresionada);
+      if (fichaSeleccionada){
+        prenderAdyacentesDisponibles(teclaPresionada);
+        destinoFicha = escucharTeclado();
+        apagarAzulesYorigen(teclaPresionada);
+        teclaPresionada = destinoFicha;
+      }else {
+        Serial.println("No selecciono ficha propia");
+      }
+    }else {
+      fichaSeleccionada = true;
+    }
+    if (fichaSeleccionada){
+      Serial.print("Volvi con tecla: "); Serial.println(teclaPresionada);
+      prenderLedJugado(jugadorActual,teclaPresionada);
+      alguienGano = chequearVictoria(cantidadMovimientos);
+    }
     siguienteTurno(jugadorActual);  
   }
 
@@ -108,6 +127,331 @@ void loop() {
 }
 
 //FUNCIONES DE JUEGO
+bool chequearFichaSeleccionada(int jugActual,char teclaPres){
+   
+  //O: rojo, 1: verde
+  switch (teclaPres){
+    case '1':
+      return (tateti[0][0] == jugActual); //Retorna verdadero si en el lugar hay una ficha del jugador
+      break;
+
+    case '2':
+      return (tateti[0][1] == jugActual);
+      break;  
+
+    case '3':
+      return (tateti[0][2] == jugActual);
+      break;  
+
+    case '4':
+      return (tateti[1][0] == jugActual);
+      break;  
+      
+    case '5':
+      return (tateti[1][1] == jugActual);
+      break;  
+      
+    case '6':
+      return (tateti[1][2] == jugActual);
+      break;  
+      
+    case '7':
+      return (tateti[2][0] == jugActual);
+      break;  
+        
+    case '8':
+      return (tateti[2][1] == jugActual);
+      break;  
+
+    case '9':
+      return (tateti[2][2] == jugActual);
+      break;  
+      
+  }//FIN switch(teclaPres)  
+}
+
+
+//Apaga las adyacentes disponibles y la que se va a mover
+void apagarAzulesYorigen(char teclaPres){
+  //Apago azules, si no estan ocupadas
+  switch (teclaPres){
+    case '1':
+      //Actualizo matriz
+      tateti[0][0] = 11;
+      //Apago el origen
+      digitalWrite(R11, LOW); digitalWrite(G11, LOW); digitalWrite(B11, LOW);      
+      //Apago adyacentes si no estan ocupados
+      if (tateti[0][1] == 12){
+          digitalWrite(R12, LOW); digitalWrite(G12, LOW); digitalWrite(B12, LOW);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, LOW);
+      }
+      if (tateti[1][0] == 14){
+          digitalWrite(R21, LOW); digitalWrite(G21, LOW); digitalWrite(B21, LOW);
+      }
+      break;
+
+    case '2':
+      tateti[0][1] = 12;
+      digitalWrite(R12, LOW); digitalWrite(G12, LOW); digitalWrite(B12, LOW);      
+      if (tateti[0][0] == 11){
+          digitalWrite(R11, LOW); digitalWrite(G11, LOW); digitalWrite(B11, LOW);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, LOW);
+      }
+      if (tateti[0][2] == 13){
+          digitalWrite(R13, LOW); digitalWrite(G13, LOW); digitalWrite(B13, LOW);
+      }
+      break;  
+
+    case '3':
+      tateti[0][2] = 13;
+      digitalWrite(R13, LOW); digitalWrite(G13, LOW); digitalWrite(B13, LOW);      
+      if (tateti[0][1] == 12){
+          digitalWrite(R12, LOW); digitalWrite(G12, LOW); digitalWrite(B12, LOW);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, LOW);
+      }
+      if (tateti[1][2] == 16){
+          digitalWrite(R23, LOW); digitalWrite(G23, LOW); digitalWrite(B23, LOW);
+      }
+      break;  
+      
+    case '4':
+      tateti[1][0] = 14;
+      digitalWrite(R21, LOW); digitalWrite(G21, LOW); digitalWrite(B21, LOW);      
+      if (tateti[0][0] == 11){
+          digitalWrite(R11, LOW); digitalWrite(G11, LOW); digitalWrite(B11, LOW);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, LOW);
+      }
+      if (tateti[2][0] == 17){
+          digitalWrite(R31, LOW); digitalWrite(G31, LOW); digitalWrite(B31, LOW);
+      }
+      break;
+      
+    case '5':
+      tateti[1][1] = 15;
+      digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, LOW);      
+      if (tateti[0][0] == 11){
+          digitalWrite(R11, LOW); digitalWrite(G11, LOW); digitalWrite(B11, LOW);
+      }
+      if (tateti[0][1] == 12){
+          digitalWrite(R12, LOW); digitalWrite(G12, LOW); digitalWrite(B12, LOW);
+      }
+      if (tateti[0][2] == 13){
+          digitalWrite(R13, LOW); digitalWrite(G13, LOW); digitalWrite(B13, LOW);
+      }
+      if (tateti[1][0] == 14){
+          digitalWrite(R21, LOW); digitalWrite(G21, LOW); digitalWrite(B21, LOW);
+      }
+      if (tateti[1][2] == 16){
+          digitalWrite(R23, LOW); digitalWrite(G23, LOW); digitalWrite(B23, LOW);
+      }  
+      if (tateti[2][0] == 17){
+          digitalWrite(R31, LOW); digitalWrite(G31, LOW); digitalWrite(B31, LOW);
+      }
+      if (tateti[2][1] == 18){
+          digitalWrite(R32, LOW); digitalWrite(G32, LOW); digitalWrite(B32, LOW);
+      }
+      if (tateti[2][2] == 19){
+          digitalWrite(R33, LOW); digitalWrite(G33, LOW); digitalWrite(B33, LOW);
+      }
+      break;
+      
+    case '6':
+      tateti[1][2] = 16;
+      digitalWrite(R23, LOW); digitalWrite(G23, LOW); digitalWrite(B23, LOW);      
+      if (tateti[0][2] == 13){
+          digitalWrite(R13, LOW); digitalWrite(G13, LOW); digitalWrite(B13, LOW);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, LOW);
+      }
+      if (tateti[2][2] == 19){
+          digitalWrite(R33, LOW); digitalWrite(G33, LOW); digitalWrite(B33, LOW);
+      }
+      break;
+      
+    case '7':
+      tateti[2][0] = 17;
+      digitalWrite(R31, LOW); digitalWrite(G31, LOW); digitalWrite(B31, LOW);      
+      if (tateti[1][0] == 14){
+          digitalWrite(R21, LOW); digitalWrite(G21, LOW); digitalWrite(B21, LOW);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, LOW);
+      }
+      if (tateti[2][1] == 18){
+          digitalWrite(R32, LOW); digitalWrite(G32, LOW); digitalWrite(B32, LOW);
+      }
+      break;
+        
+    case '8':
+      tateti[2][1] = 18;
+      digitalWrite(R32, LOW); digitalWrite(G32, LOW); digitalWrite(B32, LOW);      
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, LOW);
+      }
+      if (tateti[2][0] == 17){
+          digitalWrite(R31, LOW); digitalWrite(G31, LOW); digitalWrite(B31, LOW);
+      }
+      if (tateti[2][2] == 19){
+          digitalWrite(R33, LOW); digitalWrite(G33, LOW); digitalWrite(B33, LOW);
+      }
+      break;
+
+    case '9':
+      tateti[2][2] = 19;
+      digitalWrite(R33, LOW); digitalWrite(G33, LOW); digitalWrite(B33, LOW);      
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, LOW);
+      }
+      if (tateti[1][2] == 16){
+          digitalWrite(R23, LOW); digitalWrite(G23, LOW); digitalWrite(B23, LOW);
+      }  
+      if (tateti[2][1] == 18){
+          digitalWrite(R32, LOW); digitalWrite(G32, LOW); digitalWrite(B32, LOW);
+      }
+      break;
+  }//END SWITCH
+
+
+}
+
+//Prende en azul las luces adyacentes disponibles a la seleccionada
+void prenderAdyacentesDisponibles(char teclaPres){
+
+  switch (teclaPres){
+    case '1':
+      //Si esta vacio el lugar
+      if (tateti[0][1] == 12){
+          digitalWrite(R12, LOW); digitalWrite(G12, LOW); digitalWrite(B12, HIGH);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, HIGH);
+      }
+      if (tateti[1][0] == 14){
+          digitalWrite(R21, LOW); digitalWrite(G21, LOW); digitalWrite(B21, HIGH);
+      }
+      break;
+
+    case '2':
+      if (tateti[0][0] == 11){
+          digitalWrite(R11, LOW); digitalWrite(G11, LOW); digitalWrite(B11, HIGH);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, HIGH);
+      }
+      if (tateti[0][2] == 13){
+          digitalWrite(R13, LOW); digitalWrite(G13, LOW); digitalWrite(B13, HIGH);
+      }
+      break;  
+
+    case '3':
+      if (tateti[0][1] == 12){
+          digitalWrite(R12, LOW); digitalWrite(G12, LOW); digitalWrite(B12, HIGH);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, HIGH);
+      }
+      if (tateti[1][2] == 16){
+          digitalWrite(R23, LOW); digitalWrite(G23, LOW); digitalWrite(B23, HIGH);
+      }
+      break;  
+      
+    case '4':
+      if (tateti[0][0] == 11){
+          digitalWrite(R11, LOW); digitalWrite(G11, LOW); digitalWrite(B11, HIGH);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, HIGH);
+      }
+      if (tateti[2][0] == 17){
+          digitalWrite(R31, LOW); digitalWrite(G31, LOW); digitalWrite(B31, HIGH);
+      }
+      break;
+      
+    case '5':
+      if (tateti[0][0] == 11){
+          digitalWrite(R11, LOW); digitalWrite(G11, LOW); digitalWrite(B11, HIGH);
+      }
+      if (tateti[0][1] == 12){
+          digitalWrite(R12, LOW); digitalWrite(G12, LOW); digitalWrite(B12, HIGH);
+      }
+      if (tateti[0][2] == 13){
+          digitalWrite(R13, LOW); digitalWrite(G13, LOW); digitalWrite(B13, HIGH);
+      }
+      if (tateti[1][0] == 14){
+          digitalWrite(R21, LOW); digitalWrite(G21, LOW); digitalWrite(B21, HIGH);
+      }
+      if (tateti[1][2] == 16){
+          digitalWrite(R23, LOW); digitalWrite(G23, LOW); digitalWrite(B23, HIGH);
+      }  
+      if (tateti[2][0] == 17){
+          digitalWrite(R31, LOW); digitalWrite(G31, LOW); digitalWrite(B31, HIGH);
+      }
+      if (tateti[2][1] == 18){
+          digitalWrite(R32, LOW); digitalWrite(G32, LOW); digitalWrite(B32, HIGH);
+      }
+      if (tateti[2][2] == 19){
+          digitalWrite(R33, LOW); digitalWrite(G33, LOW); digitalWrite(B33, HIGH);
+      }
+      break;
+      
+    case '6':
+      if (tateti[0][2] == 13){
+          digitalWrite(R13, LOW); digitalWrite(G13, LOW); digitalWrite(B13, HIGH);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, HIGH);
+      }
+      if (tateti[2][2] == 19){
+          digitalWrite(R33, LOW); digitalWrite(G33, LOW); digitalWrite(B33, HIGH);
+      }
+      break;
+      
+    case '7':
+      if (tateti[1][0] == 14){
+          digitalWrite(R21, LOW); digitalWrite(G21, LOW); digitalWrite(B21, HIGH);
+      }
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, HIGH);
+      }
+      if (tateti[2][1] == 18){
+          digitalWrite(R32, LOW); digitalWrite(G32, LOW); digitalWrite(B32, HIGH);
+      }
+      break;
+        
+    case '8':
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, HIGH);
+      }
+      if (tateti[2][0] == 17){
+          digitalWrite(R31, LOW); digitalWrite(G31, LOW); digitalWrite(B31, HIGH);
+      }
+      if (tateti[2][2] == 19){
+          digitalWrite(R33, LOW); digitalWrite(G33, LOW); digitalWrite(B33, HIGH);
+      }
+      break;
+
+    case '9':
+      if (tateti[1][1] == 15){
+          digitalWrite(R22, LOW); digitalWrite(G22, LOW); digitalWrite(B22, HIGH);
+      }
+      if (tateti[1][2] == 16){
+          digitalWrite(R23, LOW); digitalWrite(G23, LOW); digitalWrite(B23, HIGH);
+      }  
+      if (tateti[2][1] == 18){
+          digitalWrite(R32, LOW); digitalWrite(G32, LOW); digitalWrite(B32, HIGH);
+      }
+      break;
+  }//END SWITCH
+}
 
 //Espera la tecla * para reiniciar el juego
 void reiniciarJuego(){
