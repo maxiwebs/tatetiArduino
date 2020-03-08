@@ -121,6 +121,8 @@ void loop() {
     siguienteTurno(jugadorActual);  
   }
 
+  //Si alguien gano
+  cantidadMovimientos = 0;
   mostrarGanador();
   reiniciarJuego();
   Serial.println("FIN de JUEGO");
