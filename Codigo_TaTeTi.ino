@@ -112,7 +112,7 @@ void loop() {
         teclaPresionada = destinoFicha;
       }else {
         Serial.println("No selecciono ficha propia");
-        encenderBuzzer(1,100);
+        encenderBuzzer(1,300);
       }
     }else {
       fichaSeleccionada = true;
@@ -604,7 +604,9 @@ void prenderLedJugado(int jugActual, char teclaPres){
           tateti[0][0] = 1;
         }
       }else {
-        Serial.println("Lugar ocupado");  
+        Serial.println("Lugar ocupado");
+        encenderBuzzer(1,300);
+        cantidadMovimientos--;
       }
       break;
 
@@ -622,6 +624,8 @@ void prenderLedJugado(int jugActual, char teclaPres){
         }
       }else {
         Serial.println("Lugar ocupado");  
+        encenderBuzzer(1,300);
+        cantidadMovimientos--;
       }
       break;  
 
@@ -639,6 +643,8 @@ void prenderLedJugado(int jugActual, char teclaPres){
         }
       }else {
         Serial.println("Lugar ocupado");  
+        encenderBuzzer(1,300);  
+        cantidadMovimientos--;
       }
       break;
       
@@ -656,6 +662,8 @@ void prenderLedJugado(int jugActual, char teclaPres){
         }
       }else {
         Serial.println("Lugar ocupado");  
+        encenderBuzzer(1,300);
+        cantidadMovimientos--;      
       }
       break;
       
@@ -673,6 +681,8 @@ void prenderLedJugado(int jugActual, char teclaPres){
         }
       }else {
         Serial.println("Lugar ocupado");  
+        encenderBuzzer(1,300);
+        cantidadMovimientos--;
       }
       break;
       
@@ -690,6 +700,8 @@ void prenderLedJugado(int jugActual, char teclaPres){
         }
       }else {
         Serial.println("Lugar ocupado");  
+        encenderBuzzer(1,300);
+        cantidadMovimientos--;
       }
 
       break;
@@ -708,6 +720,8 @@ void prenderLedJugado(int jugActual, char teclaPres){
         }
       }else {
         Serial.println("Lugar ocupado");  
+        encenderBuzzer(1,300);
+        cantidadMovimientos--;
       }
 
       break;
@@ -726,6 +740,8 @@ void prenderLedJugado(int jugActual, char teclaPres){
         }
       }else {
         Serial.println("Lugar ocupado");  
+        encenderBuzzer(1,300);
+        cantidadMovimientos--;
       }
       break;
 
@@ -743,6 +759,8 @@ void prenderLedJugado(int jugActual, char teclaPres){
         }  
       }else {
         Serial.println("Lugar ocupado");  
+        encenderBuzzer(1,300);
+        cantidadMovimientos--;
       }
       break;
       
