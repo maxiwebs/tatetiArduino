@@ -78,6 +78,8 @@ Keypad keypad = Keypad( makeKeymap(teclado_matricial), pines_filas, pines_column
 int jugadorActual = 0;
 char teclaPresionada,destinoFicha;
 bool alguienGano = false;
+bool tiempoAgotado = false;
+bool fichasPuestas = false;
 bool fichaSeleccionada = false;
 int  ganador = 2;
 int cantidadMovimientos = 0;
@@ -85,7 +87,6 @@ int cantidadMovimientos = 0;
 void setup() {
   Serial.begin(9600);
   pinMode(BUZ,OUTPUT);
- 
 }
 
 
@@ -99,10 +100,15 @@ void loop() {
     mostrarTurnoJugador(jugadorActual);
     imprimirTablero();
     teclaPresionada = escucharTeclado();
+    if (teclaPresionada == '0'){
+      Serial.println("Tiempo Agotadooooooooooooo!");
+      cantidadMovimientos--;
+    }
     cantidadMovimientos++;
     //Si ya pusieron las 6 fichas
     if (cantidadMovimientos > 6){
       //Habilito mover
+      fichasPuestas = true;
       //Chequeo si presiono un lugar no vacio (osea selecciono una ficha propia)
       fichaSeleccionada = chequearFichaSeleccionada(jugadorActual,teclaPresionada);
       if (fichaSeleccionada){
@@ -771,9 +777,10 @@ char escucharTeclado(){
 
   char presionada = NO_KEY;
   char key  = NO_KEY;
+  int cuentaRegresiva = 100;
 
   //Mientras no se apriete una tecla
-  while (key == NO_KEY){
+  while (key == NO_KEY || !tiempoAgotado){
     //Me quedo esperando
     Serial.println("Presione una tecla y luego confirme con #");
     presionada = keypad.getKey();
@@ -811,6 +818,10 @@ char escucharTeclado(){
       
     }
     delay(100);
+    cuentaRegresiva--;
+    Serial.println(cuentaRegresiva);
+    //Si se agota el tiempo, devuelve 0
+    if (cuentaRegresiva == 0 && fichasPuestas) return '0';
   }
 }
 
