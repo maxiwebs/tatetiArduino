@@ -39,6 +39,7 @@
 #define GLT A14
 #define RLT A15
 
+#define BUZ 38
 
 ////Pines Teclado Matricial
 #define C1 2
@@ -83,6 +84,7 @@ int cantidadMovimientos = 0;
 
 void setup() {
   Serial.begin(9600);
+  pinMode(BUZ,OUTPUT);
  
 }
 
@@ -91,6 +93,7 @@ void loop() {
 
   //testLedsRGB();
   //testTeclado();
+  encenderBuzzer(1,50);
 
   while (!alguienGano){
     mostrarTurnoJugador(jugadorActual);
@@ -109,6 +112,7 @@ void loop() {
         teclaPresionada = destinoFicha;
       }else {
         Serial.println("No selecciono ficha propia");
+        encenderBuzzer(1,100);
       }
     }else {
       fichaSeleccionada = true;
@@ -761,6 +765,7 @@ char escucharTeclado(){
       delay(100);
       //Muestro la tecla presionada
       Serial.println(presionada);
+      encenderBuzzer(1,50);
       //Espero confirmacion (#)
       key = keypad.getKey();
 
@@ -771,6 +776,7 @@ char escucharTeclado(){
         //Si apretaron una tecla y es la confirmacion
         if (key != NO_KEY && key == '#'){
           //Devuelvo la tecla presionada
+          encenderBuzzer(1,50);
           return presionada;
 
          //Si cambiaron de opinion y no confirmaron (pero apretaron otra tecla)
@@ -928,4 +934,14 @@ void testLedsRGB(){
   digitalWrite(RLT,LOW);
   delay(300);
   
+}
+
+void encenderBuzzer(int veces, int intervalo){
+
+  for (int i = 0; i < veces; i++){
+    digitalWrite(BUZ,HIGH);
+    delay(intervalo);
+    digitalWrite(BUZ,LOW);
+    delay(intervalo);
+  }
 }
