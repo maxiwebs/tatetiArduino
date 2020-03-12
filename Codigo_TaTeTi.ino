@@ -50,6 +50,8 @@
 #define F3 16
 #define F4 17
 
+int arrayLeds;
+
 #include <Keypad.h>
 const byte FILASLEDS = 3;
 const byte COLUMNASLEDS = 3;
