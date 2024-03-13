@@ -89,6 +89,48 @@ int cantidadMovimientos = 0;
 void setup() {
   Serial.begin(9600);
   pinMode(BUZ,OUTPUT);
+
+  pinMode(RLT,OUTPUT);
+  pinMode(GLT,OUTPUT);
+  pinMode(BLT,OUTPUT);
+  
+  pinMode(R11,OUTPUT);
+  pinMode(G11,OUTPUT);
+  pinMode(B11,OUTPUT);
+
+  pinMode(R12,OUTPUT);
+  pinMode(G12,OUTPUT);
+  pinMode(B12,OUTPUT);
+
+  pinMode(R13,OUTPUT);
+  pinMode(G13,OUTPUT);
+  pinMode(B13,OUTPUT);
+
+  pinMode(R21,OUTPUT);
+  pinMode(G21,OUTPUT);
+  pinMode(B21,OUTPUT);
+
+  pinMode(R22,OUTPUT);
+  pinMode(G22,OUTPUT);
+  pinMode(B22,OUTPUT);
+
+  pinMode(R23,OUTPUT);
+  pinMode(G23,OUTPUT);
+  pinMode(B23,OUTPUT);
+
+  pinMode(R31,OUTPUT);
+  pinMode(G31,OUTPUT);
+  pinMode(B31,OUTPUT);
+
+  pinMode(R32,OUTPUT);
+  pinMode(G32,OUTPUT);
+  pinMode(B32,OUTPUT);
+
+  pinMode(R33,OUTPUT);
+  pinMode(G33,OUTPUT);
+  pinMode(B33,OUTPUT);
+
+  
 }
 
 
